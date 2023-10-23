@@ -1,62 +1,66 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
+import { useState, useEffect } from "react";
 
 const Contacts = () => {
+  const [clientesData, setClientesData] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
+    
     {
-      field: "name",
-      headerName: "Name",
+      field: "documento",
+      headerName: "Documento",
       flex: 1,
       cellClassName: "name-column-cell",
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
+      field: "nombre",
+      headerName: "Nombre",
       headerAlign: "left",
+      flex: 1,
       align: "left",
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
+      field: "direccion",
+      headerName: "Dirección",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "telefono",
+      headerName: "Teléfono",
       flex: 1,
     },
     {
-      field: "address",
-      headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-    },
-    {
-      field: "zipCode",
-      headerName: "ZipCode",
+      field: "estado",
+      headerName: "Estado",
       flex: 1,
     },
   ];
 
+  useEffect(() => {
+    fetch('https://viramsoftapi.onrender.com/costumer')
+      .then(response => response.json())
+      .then(data => {
+        const formattedData = data.clientes.map((cliente, index) => ({
+          ...cliente,
+          id: index, // Asignando un id temporal usando el índice del array
+        }));
+        setClientesData(formattedData);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   return (
     <Box m="20px">
       <Header
-        title="CONTACTS"
-        subtitle="List of Contacts for Future Reference"
+        title="Clientes"
+        subtitle="Interfaz dedicada a la gestión de clientes"
       />
       <Box
         m="40px 0 0 0"
@@ -88,7 +92,7 @@ const Contacts = () => {
         }}
       >
         <DataGrid
-          rows={mockDataContacts}
+          rows={clientesData}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
