@@ -15,7 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-const Contacts = () => {
+const Products = () => {
   const [clientesData, setClientesData] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -275,4 +275,4 @@ const handleRefresh = () => {
   );
 };
 
-export default Contacts;
+export default Products;
