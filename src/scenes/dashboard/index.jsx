@@ -6,7 +6,7 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LineChart from "../../components/LineChart";
 import BarChart from "../../components/BarChart";
 import Pie from "../../components/PieChart";
@@ -56,25 +56,6 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
-            progress="0.75"
-            increase="+14%"
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
             title="431,225"
             subtitle="Sales Obtained"
             progress="0.5"
@@ -113,12 +94,31 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
+            title="12,361"
+            subtitle="Emails Sent"
+            progress="0.75"
+            increase="+14%"
+            icon={
+              <EmailIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn="span 3"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <StatBox
             title="1,325,441"
             subtitle="Traffic Inbound"
             progress="0.80"
             increase="+43%"
             icon={
-              <TrafficIcon
+              <LocalShippingIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }
@@ -272,15 +272,11 @@ const Dashboard = () => {
           backgroundColor={colors.primary[400]}
           p="30px"
         >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ mb: "15px" }}
-          >
+          <Typography variant="h5" fontWeight="600" sx={{ mb: "15px" }}>
             Ventas en grafico de pie
           </Typography>
           <Box height="200px">
-            <Pie /> 
+            <Pie />
           </Box>
         </Box>
       </Box>
