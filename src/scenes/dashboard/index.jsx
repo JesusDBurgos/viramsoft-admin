@@ -76,7 +76,7 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].total_pedidos}
             subtitle="Total en ventas"
-            progress={parseFloat(dashboardData[2].porc_total_pedidos) / 100}
+            progress={dashboardData[2].porc_total_pedidos ? parseFloat(dashboardData[2].porc_total_pedidos) / 100 : 0}
             increase={dashboardData[2].porc_total_pedidos}
             icon={
               <PointOfSaleIcon
@@ -95,7 +95,7 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].clientes_nuevos}
             subtitle="Nuevos clientes"
-            progress={parseFloat(dashboardData[2].porc_clientes_nuevos) / 100}
+            progress={dashboardData[2].porc_clientes_nuevos ? parseFloat(dashboardData[2].porc_clientes_nuevos) / 100 : 0}
             increase={dashboardData[2].porc_clientes_nuevos}
             icon={
               <PersonAddIcon
@@ -114,7 +114,7 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].pedidos_entregados}
             subtitle="Pedidos entregados"
-            progress={parseFloat(dashboardData[2].porc_pedidos_entregados) / 100}
+            progress={dashboardData[2].porc_pedidos_entregados ? parseFloat(dashboardData[2].porc_pedidos_entregados) / 100 : 0}
             increase={dashboardData[2].porc_pedidos_entregados}
             icon={
               <LocalShippingIcon
