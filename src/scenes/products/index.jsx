@@ -16,151 +16,89 @@ import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 const Products = () => {
-  const [clientesData, setClientesData] = useState([]);
+  const [productosData, setProductosData] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [openEditForm, setOpenEditForm] = useState(false);
-  const [openAddForm, setOpenAddForm] = useState(false);
-const [editedClient, setEditedClient] = useState(null);
-const [addClient, setAddClient] = useState(null);
+  const [editedProduct, setEditedProduct] = useState(null);
 
-const handleOpenEditForm = (client) => {
-  setEditedClient(client);
-  setOpenEditForm(true);
-};
+  const handleOpenEditForm = (product) => {
+    setEditedProduct(product);
+    setOpenEditForm(true);
+  };
 
-const handleOpenAddForm = (client) => {
-  setAddClient(client);
-  setOpenAddForm(true);
-};
+  const handleCloseEditForm = () => {
+    setEditedProduct(null);
+    setOpenEditForm(false);
+  };
 
-const handleCloseEditForm = () => {
-  setEditedClient(null);
-  setOpenEditForm(false);
-};
-const handleCloseAddForm = () => {
-  setAddClient(null);
-  setOpenAddForm(false);
-};
+  const EditarProductoDialog = () => {
+    return (
+      <Dialog open={openEditForm} onClose={handleCloseEditForm}>
+        <DialogTitle style={{ background: '#141B2D' }} sx={{ color: '#FFFFFF' }}>Editar producto</DialogTitle>
+        <DialogContent style={{ background: '#141B2D', padding: 10 }}>
+          <Box>
 
-const EditarClienteDialog = () => {
-  return (
-    <Dialog open={openEditForm} onClose={handleCloseEditForm}>
-      <DialogTitle style={{ background: '#141B2D' }} sx={{ color: '#FFFFFF' }}>Editar cliente</DialogTitle>
-      <DialogContent style={{ background: '#141B2D', padding: 10 }}>
-        <Box>
-          
-        </Box>
-        {editedClient && (
-          <form>
-            <TextField
-              label="Nombre"
-              value={editedClient.nombre}
-              sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-              style={{ borderColor: '#FFFFFF', padding: 5,}}
-              // Otros props como onChange, fullWidth, etc.
-            />
-            <TextField
-              label="Dirrección"
-              value={editedClient.direccion}
-              sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-              style={{ borderColor: '#FFFFFF', padding: 5}}
-              // Otros props como onChange, fullWidth, etc.
-            />
-            <TextField
-              label="Teléfono"
-              value={editedClient.telefono}
-              sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-              style={{ borderColor: '#FFFFFF', padding: 5}}
-              // Otros props como onChange, fullWidth, etc.
-            />
-            {/* Otros campos de texto */}
-          </form>
-        )}
-      </DialogContent>
-      <DialogActions style={{ background: '#141B2D' }}>
-        <Button onClick={handleCloseEditForm} color="inherit">
-          Cerrar
-        </Button>
-        <Button /*onClick={handleCloseForm}*/ color="inherit">
-          Guardar cambios
-        </Button>
-        {/* Botón para guardar los cambios */}
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-const AddClienteDialog = () => {
-  return (
-    <Dialog open={openAddForm} onClose={handleCloseAddForm}>
-      <DialogTitle style={{ background: '#141B2D' }} sx={{ color: '#FFFFFF' }}>Agregar cliente</DialogTitle>
-      <DialogContent style={{ background: '#141B2D', padding: 10 }}>
-      <Box>
-          
           </Box>
-          {addClient && (
+          {editedProduct && (
             <form>
               <TextField
-                label="Documento"
+                label="Valor compra"
+                value={editedProduct.valorCompra}
                 sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5,}}
-                // Otros props como onChange, fullWidth, etc.
+                style={{ borderColor: '#FFFFFF', padding: 5, }}
+              // Otros props como onChange, fullWidth, etc.
               />
               <TextField
-                label="Nombre"
+                label="Valor venta"
+                value={editedProduct.valorVenta}
                 sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5,}}
-                // Otros props como onChange, fullWidth, etc.
+                style={{ borderColor: '#FFFFFF', padding: 5 }}
+              // Otros props como onChange, fullWidth, etc.
               />
               <TextField
-                label="Dirrección"
+                label="Cantidad"
+                value={editedProduct.cantidad}
                 sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5}}
-                // Otros props como onChange, fullWidth, etc.
-              />
-              <TextField
-                label="Teléfono"
-                sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5,}}
-                // Otros props como onChange, fullWidth, etc.
+                style={{ borderColor: '#FFFFFF', padding: 5 }}
+              // Otros props como onChange, fullWidth, etc.
               />
               {/* Otros campos de texto */}
             </form>
           )}
-      </DialogContent>
-      <DialogActions style={{ background: '#141B2D' }}>
-        <Button onClick={handleCloseAddForm} color="inherit">
-          Cerrar
-        </Button>
-        <Button /*onClick={handleCloseForm}*/ color="inherit">
-          Guardar cliente
-        </Button>
-        {/* Botón para guardar los cambios */}
-      </DialogActions>
-    </Dialog>
-  );
-};
+        </DialogContent>
+        <DialogActions style={{ background: '#141B2D' }}>
+          <Button onClick={handleCloseEditForm} color="inherit">
+            Cerrar
+          </Button>
+          <Button /*onClick={handleCloseForm}*/ color="inherit">
+            Guardar cambios
+          </Button>
+          {/* Botón para guardar los cambios */}
+        </DialogActions>
+      </Dialog>
+    );
+  };
 
-const handleRefresh = () => {
-  fetch('https://viramsoftapi.onrender.com/costumer')
-    .then(response => response.json())
-    .then(data => {
-      const formattedData = data.clientes.map((cliente, index) => ({
-        ...cliente,
-        id: index,
-      }));
-      setClientesData(formattedData);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-};
+  const handleRefresh = () => {
+    fetch('https://viramsoftapi.onrender.com/product')
+      .then(response => response.json())
+      .then(data => {
+        const formattedData = data.productos.map((producto, index) => ({
+          ...producto,
+          id: index,
+        }));
+        setProductosData(formattedData);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
 
   const columns = [
-    
+
     {
-      field: "documento",
-      headerName: "Documento",
+      field: "idProducto",
+      headerName: "ID",
       flex: 1,
       cellClassName: "name-column-cell",
     },
@@ -172,18 +110,33 @@ const handleRefresh = () => {
       align: "left",
     },
     {
-      field: "direccion",
-      headerName: "Dirección",
+      field: "marca",
+      headerName: "Marca",
       flex: 1,
     },
     {
-      field: "telefono",
-      headerName: "Teléfono",
+      field: "categoria",
+      headerName: "Categoría",
       flex: 1,
     },
     {
-      field: "estado",
-      headerName: "Estado",
+      field: "cantidad",
+      headerName: "Cantidad",
+      flex: 1,
+    },
+    {
+      field: "valorCompra",
+      headerName: "Valor compra",
+      flex: 1,
+    },
+    {
+      field: "valorVenta",
+      headerName: "Valor venta",
+      flex: 1,
+    },
+    {
+      field: "unidadMedida",
+      headerName: "Unidad medida",
       flex: 1,
     },
     {
@@ -194,24 +147,24 @@ const handleRefresh = () => {
           <IconButton color="inherit" onClick={() => handleOpenEditForm(params.row)}>
             <EditIcon />
           </IconButton>
-          <IconButton color="inherit" onClick={() => handleOpenAddForm(params.row)}>
+          <IconButton color="inherit">
             <AddIcon />
           </IconButton>
         </div>
       ),
     },
   ];
-  
+
 
   useEffect(() => {
-    fetch('https://viramsoftapi.onrender.com/costumer')
+    fetch('https://viramsoftapi.onrender.com/product')
       .then(response => response.json())
       .then(data => {
-        const formattedData = data.clientes.map((cliente, index) => ({
-          ...cliente,
+        const formattedData = data.productos.map((producto, index) => ({
+          ...producto,
           id: index, // Asignando un id temporal usando el índice del array
         }));
-        setClientesData(formattedData);
+        setProductosData(formattedData);
       })
       .catch(error => console.error('Error fetching data:', error));
   }, []);
@@ -219,8 +172,8 @@ const handleRefresh = () => {
   return (
     <Box m="20px">
       <Header
-        title="Clientes"
-        subtitle="Interfaz dedicada a la gestión de clientes"
+        title="Productos"
+        subtitle="Interfaz dedicada a la gestión de productos"
       />
       <Box
         m="40px 0 0 0"
@@ -252,26 +205,24 @@ const handleRefresh = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<RefreshIcon />}
-    onClick={handleRefresh}
-  >
-    Refrescar
-  </Button>
-</Box>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<RefreshIcon />}
+            onClick={handleRefresh}
+          >
+            Refrescar
+          </Button>
+        </Box>
 
         <DataGrid
-          rows={clientesData}
+          rows={productosData}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
         />
       </Box>
-      <EditarClienteDialog />
-      <AddClienteDialog/>
+      <EditarProductoDialog />
     </Box>
-    
+
   );
 };
 

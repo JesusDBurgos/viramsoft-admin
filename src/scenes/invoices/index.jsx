@@ -119,7 +119,6 @@ const Invoices = () => {
         <DataGrid
           rows={pedidosData}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
         />
       </Box>
     </Box>
