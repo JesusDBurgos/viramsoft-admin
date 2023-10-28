@@ -17,6 +17,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Alert from '@mui/material/Alert';
 
 const Contacts = () => {
   const [clientesData, setClientesData] = useState([]);
@@ -25,16 +26,19 @@ const Contacts = () => {
 
   const [openEditForm, setOpenEditForm] = useState(false);
   const [openAddForm, setOpenAddForm] = useState(false);
-  const [editedClient, setEditedClient] = useState(null);
   const [addClient, setAddClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [mensaje, setMensaje] = useState(null);
 
   const handleOpenEditForm = (client) => {
-    setEditedClient(client);
-    setOpenEditForm(true);
-  };
+  setSelectedClient(client);
+  setOpenEditForm(true);
+  setMensaje(null); // Resetear mensaje
+};
+
+
 
   const handleCloseEditForm = () => {
-    setEditedClient(null);
     setOpenEditForm(false);
   };
 
@@ -49,76 +53,140 @@ const Contacts = () => {
   };
 
   const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    contact: "",
-    address1: "",
-    address2: "",
+    documento: "",
+    nombre: "",
+    direccion: "",
+    telefono: "",
   };
-  
-  const phoneRegExp =
-    /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-  
+
+  const docRegExp = /^[0-9]{8,10}$/;
+  const phoneRegExp = /^[0-9]{10}$/;
+
   const checkoutSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
-    email: yup.string().email("invalid email").required("required"),
-    contact: yup
+    documento: yup
       .string()
-      .matches(phoneRegExp, "Phone number is not valid")
-      .required("required"),
-    address1: yup.string().required("required"),
-    address2: yup.string().required("required"),
+      .matches(docRegExp, "Documento inválido")
+      .required("Requerido"),
+    nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
+    direccion: yup.string().required("Requerido").max(50, "La dirección debe tener como máximo 50 caracteres"),
+    telefono: yup
+      .string()
+      .matches(phoneRegExp, "Número de teléfono inválido")
+      .required("Requerido"),
   });
 
   const EditarClienteDialog = () => {
+    const isNonMobile = useMediaQuery("(min-width:600px");
     return (
+      
       <Dialog open={openEditForm} onClose={handleCloseEditForm}>
-        <DialogTitle style={{ background: '#141B2D' }} sx={{ color: '#FFFFFF' }}>Editar cliente</DialogTitle>
-        <DialogContent style={{ background: '#141B2D', padding: 10 }}>
-          <Box>
+        
+        
+        <DialogContent>
+  {mensaje && (
+    <Box mb="10px">
+      <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
+        {mensaje}
+      </Alert>
+    </Box>
+  )}
+</DialogContent>
 
-          </Box>
-          {editedClient && (
-            <form>
-              <TextField
-                label="Nombre"
-                value={editedClient.nombre}
-                sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5, }}
-              // Otros props como onChange, fullWidth, etc.
-              />
-              <TextField
-                label="Dirrección"
-                value={editedClient.direccion}
-                sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5 }}
-              // Otros props como onChange, fullWidth, etc.
-              />
-              <TextField
-                label="Teléfono"
-                value={editedClient.telefono}
-                sx={{ '& .MuiInputBase-input': { color: '#FFFFFF' } }}
-                style={{ borderColor: '#FFFFFF', padding: 5 }}
-              // Otros props como onChange, fullWidth, etc.
-              />
-              {/* Otros campos de texto */}
+        <Box m="20px">
+          <Header title="Editar cliente" />
+
+          <Formik
+  initialValues={{
+    telefono: selectedClient ? selectedClient.telefono : "",
+    nombre: selectedClient ? selectedClient.nombre : "",
+    direccion: selectedClient ? selectedClient.direccion : "",
+  }}
+  onSubmit={async (values) => {
+    try {
+      const response = await fetch(`https://viramsoftapi.onrender.com/edit_costumer/${selectedClient.documento}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        setMensaje('Cliente actualizado exitosamente.');
+      } else {
+        setMensaje('Error al actualizar el cliente.');
+      }
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+      setMensaje('Error al actualizar el cliente.');
+    }
+  }}
+>
+              {(formikProps) => (
+            <form onSubmit={formikProps.handleSubmit}>
+              <Box
+                gap="30px"
+                gridTemplateColumns="repeat(4,minmax(0, 1fr))"
+                sx={{ 
+                  "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                }}
+              >
+                <TextField
+                  style={{ margin: 1, marginBottom: 25 }}
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Teléfono"
+                  name="telefono"
+                  sx={{ gridColumn: "span 2", }}
+                  value={formikProps.values.telefono}
+                  onChange={formikProps.handleChange}
+                />
+                <TextField
+                  style={{ margin: 1, marginBottom: 25}}
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Nombre"
+                  name="nombre"
+                  sx={{ gridColumn: "span 4" }}
+                  value={formikProps.values.nombre}
+                  onChange={formikProps.handleChange}
+                />
+
+                <TextField
+                  style={{ margin: 1, marginBottom: 25}}
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="Dirección"
+                  name="direccion"
+                  sx={{ gridColumn: "span 4" }}
+                  value={formikProps.values.direccion}
+                  onChange={formikProps.handleChange}
+                />
+              </Box>
+              <Box display="flex" justifyContent="end" mt="20px">
+                <Button
+                  style={{ marginRight: 7 }}
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  onClick={handleCloseEditForm}
+                >
+                  Cerrar
+                </Button>
+                <Button color="secondary" variant="contained" type="submit">
+                  Guardar
+                </Button>
+              </Box>
             </form>
           )}
-        </DialogContent>
-        <DialogActions style={{ background: '#141B2D' }}>
-          <Button onClick={handleCloseEditForm} color="inherit">
-            Cerrar
-          </Button>
-          <Button /*onClick={handleCloseForm}*/ color="inherit">
-            Guardar cambios
-          </Button>
-          {/* Botón para guardar los cambios */}
-        </DialogActions>
-      </Dialog>
-    );
-  };
+        </Formik>
+      </Box>
+    </Dialog>
+  );
+};
 
   const handleRefresh = () => {
     fetch('https://viramsoftapi.onrender.com/costumer')
@@ -191,126 +259,104 @@ const Contacts = () => {
 
   const OpenAddClienteDialog = () => {
     const isNonMobile = useMediaQuery("(min-width:600px");
-  const handleFormSubmit = (values) => {
-    console.log(values);
-  };
+    const handleFormSubmit = (values) => {
+      console.log(values);
+    };
     return (
-      
-      <Dialog open={openAddForm} onClose={handleCloseAddForm}>
-        <DialogTitle style={{ background: '#141B2D' }} sx={{ color: '#FFFFFF' }}>Agregar cliente</DialogTitle>
-        <Box m="20px">
-      <Header title="CREATE USER" subtitle="Create a New User Profile" />
 
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={checkoutSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handledBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4,minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
-            >
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="First Name"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
-                sx={{ gridColumn: "span 2" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Last Name"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                error={!!touched.lastName && !!errors.lastName}
-                helperText={touched.lastName && errors.lastName}
-                sx={{ gridColumn: "span 2" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Email"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Contact Number"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.contact}
-                name="contact"
-                error={!!touched.contact && !!errors.contact}
-                helperText={touched.contact && errors.contact}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 1"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.address1}
-                name="address1"
-                error={!!touched.address1 && !!errors.address1}
-                helperText={touched.address1 && errors.address1}
-                sx={{ gridColumn: "span 4" }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 2"
-                onBlur={handledBlur}
-                onChange={handleChange}
-                value={values.address2}
-                name="address2"
-                error={!!touched.address2 && !!errors.address2}
-                helperText={touched.address2 && errors.address2}
-                sx={{ gridColumn: "span 4" }}
-              />
-            </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Create New User
-              </Button>
-            </Box>
-          </form>
-        )}
-      </Formik>
-    </Box>
+      <Dialog open={openAddForm} onClose={handleCloseAddForm}>
+        <DialogTitle ></DialogTitle>
+        <Box m="20px">
+          <Header title="Agregar cliente" />
+
+          <Formik
+            onSubmit={handleFormSubmit}
+            initialValues={initialValues}
+            validationSchema={checkoutSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handledBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box
+                  display="grid"
+                  gap="30px"
+                  gridTemplateColumns="repeat(4,minmax(0, 1fr))"
+                  sx={{
+                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                  }}
+                >
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Documento"
+                    onBlur={handledBlur}
+                    onChange={handleChange}
+                    value={values.documento}
+                    name="documento"
+                    error={!!touched.documento && !!errors.documento}
+                    helperText={touched.documento && errors.documento}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Teléfono"
+                    onBlur={handledBlur}
+                    onChange={handleChange}
+                    value={values.telefono}
+                    name="telefono"
+                    error={!!touched.telefono && !!errors.telefono}
+                    helperText={touched.telefono && errors.telefono}
+                    sx={{ gridColumn: "span 2" }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Nombre"
+                    onBlur={handledBlur}
+                    onChange={handleChange}
+                    value={values.nombre}
+                    name="nombre"
+                    error={!!touched.nombre && !!errors.nombre}
+                    helperText={touched.nombre && errors.nombre}
+                    sx={{ gridColumn: "span 4" }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Dirección"
+                    onBlur={handledBlur}
+                    onChange={handleChange}
+                    value={values.direccion}
+                    name="direccion"
+                    error={!!touched.direccion && !!errors.direccion}
+                    helperText={touched.direccion && errors.direccion}
+                    sx={{ gridColumn: "span 4" }}
+                  />
+                </Box>
+                <Box display="flex" justifyContent="end" mt="20px">
+                  <Button style={{ marginRight: 7 }} type="submit" color="secondary" variant="contained" onClick={handleCloseAddForm}>
+                    Cerrar
+                  </Button>
+                  <Button type="submit" color="secondary" variant="contained">
+                    Agregar cliente
+                  </Button>
+                </Box>
+              </form>
+            )}
+          </Formik>
+        </Box>
       </Dialog>
     );
   };
@@ -351,24 +397,24 @@ const Contacts = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<RefreshIcon />}
-    onClick={handleRefresh}
-    style={{ marginRight: '10px' }} // Añadido para separar los botones
-  >
-    Refrescar
-  </Button>
-  <Button
-    variant="contained"
-    color="primary"
-    startIcon={<AddIcon />}
-    onClick={handleOpenAddForm}
-  >
-    Agregar nuevo cliente
-  </Button>
-</Box>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<RefreshIcon />}
+            onClick={handleRefresh}
+            style={{ marginRight: 7}} // Añadido para separar los botones
+          >
+            Refrescar
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<AddIcon />}
+            onClick={handleOpenAddForm}
+          >
+            Agregar nuevo cliente
+          </Button>
+        </Box>
 
 
         <DataGrid
@@ -377,7 +423,7 @@ const Contacts = () => {
         />
       </Box>
       <EditarClienteDialog />
-      <OpenAddClienteDialog/>
+      <OpenAddClienteDialog />
     </Box>
 
   );
