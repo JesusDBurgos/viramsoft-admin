@@ -2,7 +2,6 @@ import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useState, useEffect } from "react";
-import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
@@ -18,7 +17,9 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [dashboardData, setDashboardData] = useState(null);
-
+  const [semanasAtras, setSemanasAtras] = useState(4);
+  const [databc, setDatabc] = useState(null);
+  
   useEffect(() => {
     fetch("https://viramsoftapi.onrender.com/indicadores_dashboard")
       .then((response) => response.json())
@@ -30,6 +31,28 @@ const Dashboard = () => {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+
+  const fetchDatabc = () => {
+    fetch(`https://viramsoftapi.onrender.com/ventas_por_periodo?semanas_atras=${semanasAtras}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error al obtener los datos");
+        }
+        return response.json();
+      })
+      .then((responseData) => {
+        // Actualiza el estado con los datos recibidos
+        setDatabc(responseData);
+        console.log(databc);
+      })
+      .catch((error) => {
+        console.error("Error de la solicitud:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchDatabc();
+  }, [semanasAtras]);
 
   console.log(dashboardData);
   if (dashboardData === null) {
@@ -181,7 +204,7 @@ const Dashboard = () => {
             </Box>
           </Box>
           <Box height="250px" mt="-20px">
-            <LineChart isDashboard={true} />
+            <LineChart isDashboard={true} data={databc}/>
           </Box>
         </Box>
         {/* TRANSACTIONS */}
@@ -220,10 +243,10 @@ const Dashboard = () => {
                     variant="h5"
                     fontWeight="600"
                   >
-                    {pedido.idPedido}
+                    {pedido.vendedor}
                   </Typography>
                   <Typography color={colors.greenAccent[100]}>
-                    {pedido.idPedido}
+                    Pedido número: {pedido.idPedido}
                   </Typography>
                 </Box>
                 <Box color={colors.grey[100]}>{pedido.fechaEntrega}</Box>
