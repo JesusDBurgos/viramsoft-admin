@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/viramsoft-admin/static/css/main.25b0cb01.css",
+    "main.js": "/viramsoft-admin/static/js/main.40521dd7.js",
+    "index.html": "/viramsoft-admin/index.html",
+    "main.25b0cb01.css.map": "/viramsoft-admin/static/css/main.25b0cb01.css.map",
+    "main.40521dd7.js.map": "/viramsoft-admin/static/js/main.40521dd7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.25b0cb01.css",
+    "static/js/main.40521dd7.js"
+  ]
+}
