@@ -2,24 +2,21 @@ import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useState, useEffect } from "react";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LineChart from "../../components/LineChart";
-import BarChart from "../../components/BarChart";
-import Pie from "../../components/PieChart";
 import StatBox from "../../components/StatBox";
-import ProgressCircle from "../../components/ProgressCircle";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [dashboardData, setDashboardData] = useState(null);
   const [semanasAtras, setSemanasAtras] = useState(4);
+  const [ventasSemana, setVentasSemana] = useState(0);
   const [databc, setDatabc] = useState(null);
-  
+
   useEffect(() => {
     fetch("https://viramsoftapi.onrender.com/indicadores_dashboard")
       .then((response) => response.json())
@@ -33,7 +30,9 @@ const Dashboard = () => {
   }, []);
 
   const fetchDatabc = () => {
-    fetch(`https://viramsoftapi.onrender.com/ventas_por_periodo?semanas_atras=${semanasAtras}`)
+    fetch(
+      `https://viramsoftapi.onrender.com/ventas_por_periodo?semanas_atras=${semanasAtras}`
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error al obtener los datos");
@@ -58,28 +57,22 @@ const Dashboard = () => {
   if (dashboardData === null) {
     return <div>Cargando...</div>;
   }
+
+  console.log(databc);
+  if (databc === null) {
+    return <div>Cargando...</div>;
+  }
+
+  const total = databc.data.reduce((acc, curr) => {
+    return acc + Number(curr);
+  }, 0);
   return (
     <Box m="20px">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt="-50px">
         <Header
           title="DASHBOARD"
           subtitle="Bienvenido a Viramsoft ADMIN"
         ></Header>
-
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontsize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box>
       </Box>
 
       <Box
@@ -99,7 +92,11 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].total_pedidos}
             subtitle="Total en ventas"
-            progress={dashboardData[2].porc_total_pedidos ? parseFloat(dashboardData[2].porc_total_pedidos) / 100 : 0}
+            progress={
+              dashboardData[2].porc_total_pedidos
+                ? parseFloat(dashboardData[2].porc_total_pedidos) / 100
+                : 0
+            }
             increase={dashboardData[2].porc_total_pedidos}
             icon={
               <PointOfSaleIcon
@@ -118,7 +115,11 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].clientes_nuevos}
             subtitle="Nuevos clientes"
-            progress={dashboardData[2].porc_clientes_nuevos ? parseFloat(dashboardData[2].porc_clientes_nuevos) / 100 : 0}
+            progress={
+              dashboardData[2].porc_clientes_nuevos
+                ? parseFloat(dashboardData[2].porc_clientes_nuevos) / 100
+                : 0
+            }
             increase={dashboardData[2].porc_clientes_nuevos}
             icon={
               <PersonAddIcon
@@ -137,7 +138,11 @@ const Dashboard = () => {
           <StatBox
             title={dashboardData[0].pedidos_entregados}
             subtitle="Pedidos entregados"
-            progress={dashboardData[2].porc_pedidos_entregados ? parseFloat(dashboardData[2].porc_pedidos_entregados) / 100 : 0}
+            progress={
+              dashboardData[2].porc_pedidos_entregados
+                ? parseFloat(dashboardData[2].porc_pedidos_entregados) / 100
+                : 0
+            }
             increase={dashboardData[2].porc_pedidos_entregados}
             icon={
               <LocalShippingIcon
@@ -185,26 +190,19 @@ const Dashboard = () => {
                 fontWeight="600"
                 color={colors.grey[100]}
               >
-                Revenue Generated
+                Ventas por semanas
               </Typography>
               <Typography
                 variant="h3"
                 fontWeight="bold"
                 color={colors.greenAccent[500]}
               >
-                $59,342,32
+                ${total}
               </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
             </Box>
           </Box>
           <Box height="250px" mt="-20px">
-            <LineChart isDashboard={true} data={databc}/>
+            <LineChart isDashboard={true} data={databc} />
           </Box>
         </Box>
         {/* TRANSACTIONS */}
@@ -218,12 +216,12 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`4px solid ${colors.primary[800]}`}
             colors={colors.grey[100]}
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Pedidos recientes
             </Typography>
           </Box>
 
@@ -234,12 +232,12 @@ const Dashboard = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
+                borderBottom={`4px solid ${colors.primary[800]}`}
                 p="15px"
               >
                 <Box>
                   <Typography
-                    color={colors.greenAccent[500]}
+                    color={colors.greenAccent[100]}
                     variant="h5"
                     fontWeight="600"
                   >
@@ -260,67 +258,6 @@ const Dashboard = () => {
               </Box>
             );
           })}
-        </Box>
-
-        {/* ROW 3 */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          p="30px"
-        >
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt="25px"
-          >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
-            >
-              $48,532 revenue generated
-            </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
-          </Box>
-        </Box>
-
-        {/*  */}
-
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ p: "30px 30px 0 30px" }}
-          >
-            Sales Quantity
-          </Typography>
-          <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
-          </Box>
-        </Box>
-
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          p="30px"
-        >
-          <Typography variant="h5" fontWeight="600" sx={{ mb: "15px" }}>
-            Ventas en grafico de pie
-          </Typography>
-          <Box height="200px">
-            <Pie />
-          </Box>
         </Box>
       </Box>
     </Box>
