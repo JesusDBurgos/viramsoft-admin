@@ -15,6 +15,22 @@ body,
   position: relative;
 }
 
+.form-control:focus{
+  outline: none;
+  border: none;
+}
+.container-login {
+  margin: 0 auto;
+  padding: 80px;
+  width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 ::-webkit-scrollbar{
   width: 10px;
 }
