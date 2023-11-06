@@ -10,16 +10,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Alert from '@mui/material/Alert';
-import SyncAltIcon from '@mui/icons-material/SyncAlt';
-
+import Alert from "@mui/material/Alert";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
 
 const Contacts = () => {
   const [clientesData, setClientesData] = useState([]);
@@ -39,8 +38,6 @@ const Contacts = () => {
     setMensaje(null); // Resetear mensaje
   };
 
-
-
   const handleCloseEditForm = () => {
     setOpenEditForm(false);
   };
@@ -58,24 +55,32 @@ const Contacts = () => {
 
   const handleSyncClient = async (id_cliente, doc_cliente) => {
     try {
-      const response = await fetch(`https://viramsoftapi.onrender.com/costumer_change_state/${id_cliente}?doc_cliente=${doc_cliente}&summary=Este%20endpoint%20cambia%20el%20estado%20del%20cliente`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `https://viramsoftapi.onrender.com/costumer_change_state/${id_cliente}?doc_cliente=${doc_cliente}&summary=Este%20endpoint%20cambia%20el%20estado%20del%20cliente`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
-        setMensajeEstado(`Estado del cliente cambiado exitosamente para el cliente ${id_cliente}.`);
+        setMensajeEstado(
+          `Estado del cliente cambiado exitosamente para el cliente ${id_cliente}.`
+        );
       } else {
-        setMensajeEstado(`Error al cambiar el estado del cliente para el cliente ${id_cliente}.`);
+        setMensajeEstado(
+          `Error al cambiar el estado del cliente para el cliente ${id_cliente}.`
+        );
       }
     } catch (error) {
-      console.error('Error al enviar la solicitud:', error);
-      setMensajeEstado(`Error al cambiar el estado del cliente para el cliente ${id_cliente}.`);
+      console.error("Error al enviar la solicitud:", error);
+      setMensajeEstado(
+        `Error al cambiar el estado del cliente para el cliente ${id_cliente}.`
+      );
     }
   };
-
 
   const initialValues = {
     documento: "",
@@ -92,8 +97,29 @@ const Contacts = () => {
       .string()
       .matches(docRegExp, "Documento inválido")
       .required("Requerido"),
-    nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
-    direccion: yup.string().required("Requerido").max(70, "La dirección debe tener como máximo 70 caracteres"),
+    nombre: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El nombre debe tener como máximo 20 caracteres"),
+    direccion: yup
+      .string()
+      .required("Requerido")
+      .max(70, "La dirección debe tener como máximo 70 caracteres"),
+    telefono: yup
+      .string()
+      .matches(phoneRegExp, "Número de teléfono inválido")
+      .required("Requerido"),
+  });
+
+  const checkoutSchema2 = yup.object().shape({
+    nombre: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El nombre debe tener como máximo 20 caracteres"),
+    direccion: yup
+      .string()
+      .required("Requerido")
+      .max(70, "La dirección debe tener como máximo 70 caracteres"),
     telefono: yup
       .string()
       .matches(phoneRegExp, "Número de teléfono inválido")
@@ -103,14 +129,15 @@ const Contacts = () => {
   const EditarClienteDialog = () => {
     const isNonMobile = useMediaQuery("(min-width:600px");
     return (
-
       <Dialog open={openEditForm} onClose={handleCloseEditForm}>
-
-
         <DialogContent>
           {mensaje && (
             <Box mb="10px">
-              <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
+              <Alert
+                severity={
+                  mensaje.includes("exitosamente") ? "success" : "error"
+                }
+              >
                 {mensaje}
               </Alert>
             </Box>
@@ -126,34 +153,47 @@ const Contacts = () => {
               nombre: selectedClient ? selectedClient.nombre : "",
               direccion: selectedClient ? selectedClient.direccion : "",
             }}
+            validationSchema={checkoutSchema2}
             onSubmit={async (values) => {
               try {
-                const response = await fetch(`https://viramsoftapi.onrender.com/edit_costumer/${selectedClient.documento}`, {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(values),
-                });
+                const response = await fetch(
+                  `https://viramsoftapi.onrender.com/edit_costumer/${selectedClient.documento}`,
+                  {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values),
+                  }
+                );
 
                 if (response.ok) {
-                  setMensaje('Cliente actualizado exitosamente.');
+                  setMensaje("Cliente actualizado exitosamente.");
                 } else {
-                  setMensaje('Error al actualizar el cliente.');
+                  setMensaje("Error al actualizar el cliente.");
                 }
               } catch (error) {
-                console.error('Error al enviar la solicitud:', error);
-                setMensaje('Error al actualizar el cliente.');
+                console.error("Error al enviar la solicitud:", error);
+                setMensaje("Error al actualizar el cliente.");
               }
             }}
           >
-            {(formikProps) => (
-              <form onSubmit={formikProps.handleSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handledBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
                 <Box
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
                   sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
                   }}
                 >
                   <TextField
@@ -162,10 +202,13 @@ const Contacts = () => {
                     variant="filled"
                     type="text"
                     label="Teléfono"
+                    onBlur={handledBlur}
                     name="telefono"
-                    sx={{ gridColumn: "span 2", }}
-                    value={formikProps.values.telefono}
-                    onChange={formikProps.handleChange}
+                    error={!!touched.telefono && !!errors.telefono}
+                    helperText={touched.telefono && errors.telefono}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.telefono}
+                    onChange={handleChange}
                   />
                   <TextField
                     style={{ margin: 1, marginBottom: 25 }}
@@ -173,10 +216,13 @@ const Contacts = () => {
                     variant="filled"
                     type="text"
                     label="Nombre"
+                    onBlur={handledBlur}
                     name="nombre"
+                    error={!!touched.nombre && !!errors.nombre}
+                    helperText={touched.nombre && errors.nombre}
                     sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.nombre}
-                    onChange={formikProps.handleChange}
+                    value={values.nombre}
+                    onChange={handleChange}
                   />
 
                   <TextField
@@ -185,10 +231,13 @@ const Contacts = () => {
                     variant="filled"
                     type="text"
                     label="Dirección"
+                    onBlur={handledBlur}
                     name="direccion"
+                    error={!!touched.direccion && !!errors.direccion}
+                    helperText={touched.direccion && errors.direccion}
                     sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.direccion}
-                    onChange={formikProps.handleChange}
+                    value={values.direccion}
+                    onChange={handleChange}
                   />
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
@@ -215,20 +264,19 @@ const Contacts = () => {
 
   const handleRefresh = () => {
     setMensajeEstado(null);
-    fetch('https://viramsoftapi.onrender.com/costumer')
-      .then(response => response.json())
-      .then(data => {
+    fetch("https://viramsoftapi.onrender.com/costumer")
+      .then((response) => response.json())
+      .then((data) => {
         const formattedData = data.clientes.map((cliente, index) => ({
           ...cliente,
           id: index,
         }));
         setClientesData(formattedData);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   };
 
   const columns = [
-
     {
       field: "documento",
       headerName: "Documento",
@@ -276,10 +324,18 @@ const Contacts = () => {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <IconButton color="inherit" onClick={() => handleOpenEditForm(params.row)}>
+          <IconButton
+            color="inherit"
+            onClick={() => handleOpenEditForm(params.row)}
+          >
             <EditIcon />
           </IconButton>
-          <IconButton color="inherit" onClick={() => handleSyncClient(params.row.id, params.row.documento)}>
+          <IconButton
+            color="inherit"
+            onClick={() =>
+              handleSyncClient(params.row.id, params.row.documento)
+            }
+          >
             <SyncAltIcon />
           </IconButton>
         </div>
@@ -288,46 +344,50 @@ const Contacts = () => {
   ];
 
   useEffect(() => {
-    fetch('https://viramsoftapi.onrender.com/costumer')
-      .then(response => response.json())
-      .then(data => {
+    fetch("https://viramsoftapi.onrender.com/costumer")
+      .then((response) => response.json())
+      .then((data) => {
         const formattedData = data.clientes.map((cliente, index) => ({
           ...cliente,
           id: index, // Asignando un id temporal usando el índice del array
         }));
         setClientesData(formattedData);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const OpenAddClienteDialog = () => {
     const isNonMobile = useMediaQuery("(min-width:600px");
     const handleFormSubmit = async (values) => {
       try {
-        const response = await fetch('https://viramsoftapi.onrender.com/create_costumer', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
-        });
+        const response = await fetch(
+          "https://viramsoftapi.onrender.com/create_costumer",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
 
         if (response.ok) {
-          setMensaje('Cliente agregado exitosamente.');
+          setMensaje("Cliente agregado exitosamente.");
         } else {
-          setMensaje('Error al agregar el cliente.');
+          setMensaje("Error al agregar el cliente.");
         }
       } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
-        setMensaje('Error al agregar el cliente.');
+        console.error("Error al enviar la solicitud:", error);
+        setMensaje("Error al agregar el cliente.");
       }
-    }
+    };
     return (
-
       <Dialog open={openAddForm} onClose={handleCloseAddForm}>
         {mensaje && (
           <Box mb="10px">
-            <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
+            <Alert
+              severity={mensaje.includes("exitosamente") ? "success" : "error"}
+            >
               {mensaje}
             </Alert>
           </Box>
@@ -355,7 +415,9 @@ const Contacts = () => {
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
                   sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
                   }}
                 >
                   <TextField
@@ -413,7 +475,13 @@ const Contacts = () => {
                   />
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
-                  <Button style={{ marginRight: 7 }} type="submit" color="secondary" variant="contained" onClick={handleCloseAddForm}>
+                  <Button
+                    style={{ marginRight: 7 }}
+                    type="submit"
+                    color="secondary"
+                    variant="contained"
+                    onClick={handleCloseAddForm}
+                  >
                     Cerrar
                   </Button>
                   <Button type="submit" color="secondary" variant="contained">
@@ -435,12 +503,16 @@ const Contacts = () => {
         subtitle="Interfaz dedicada a la gestión de clientes"
       />
       {mensajeEstado && (
-            <Box mb="10px">
-              <Alert severity={mensajeEstado.includes('exitosamente') ? 'success' : 'error'}>
-                {mensajeEstado}
-              </Alert>
-            </Box>
-          )}
+        <Box mb="10px">
+          <Alert
+            severity={
+              mensajeEstado.includes("exitosamente") ? "success" : "error"
+            }
+          >
+            {mensajeEstado}
+          </Alert>
+        </Box>
+      )}
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -471,7 +543,6 @@ const Contacts = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-        
           <Button
             variant="contained"
             color="secondary"
@@ -491,16 +562,11 @@ const Contacts = () => {
           </Button>
         </Box>
 
-
-        <DataGrid
-          rows={clientesData}
-          columns={columns}
-        />
+        <DataGrid rows={clientesData} columns={columns} />
       </Box>
       <EditarClienteDialog />
       <OpenAddClienteDialog />
     </Box>
-
   );
 };
 
