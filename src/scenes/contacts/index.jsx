@@ -429,7 +429,7 @@ const Contacts = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box m="20px" mt="-40px">
       <Header
         title="Clientes"
         subtitle="Interfaz dedicada a la gestión de clientes"
