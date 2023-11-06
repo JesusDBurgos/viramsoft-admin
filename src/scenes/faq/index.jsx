@@ -12,65 +12,35 @@ const FAQ = () => {
 
   return (
     <Box m="20px">
-      <Header title="FAQ" subtitle="Frequently Asked Questions Page" />
+      <Header title="Información de contacto" subtitle="Aquí puede contactar a los desarrolladores." />
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
+            Víctor Manuel Peraza Beltrán
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>XD</Typography>
+          <Typography>Info</Typography>
         </AccordionDetails>
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
+          Jesus David Burgos Torres
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>XD</Typography>
+          <Typography>Info</Typography>
         </AccordionDetails>
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
+          Raúl Eduardo Calderón Vasquez
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>XD</Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>XD</Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>XD</Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            An important question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>XD</Typography>
+          <Typography>Info</Typography>
         </AccordionDetails>
       </Accordion>
     </Box>

@@ -75,7 +75,7 @@ const Login = () => {
           required
           class="form-control"
           type="password"
-          placeholder="contraseña"
+          placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={{ marginBottom: "30px" }}
