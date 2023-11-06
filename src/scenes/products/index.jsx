@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -16,7 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Alert from '@mui/material/Alert';
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import * as yup from "yup";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -50,7 +50,7 @@ const Products = () => {
     setAddProduct(null);
     setOpenAddForm(false);
     setImagenSeleccionada(null);
-    setMensaje(null); 
+    setMensaje(null);
   };
 
   const handleOpenEditForm = (product) => {
@@ -89,7 +89,10 @@ const Products = () => {
               cantidad: selectedProduct ? selectedProduct.cantidad : "",
               valorCompra: selectedProduct ? selectedProduct.valorCompra : "",
               valorVenta: selectedProduct ? selectedProduct.valorVenta : "",
-            }}
+              imagen: selectedProduct && selectedProduct.imagenes ? (selectedProduct.imagenes.length > 0 ? selectedProduct.imagenes[0] : '') : '',
+              imagenes: selectedProduct && selectedProduct.imagenes ? selectedProduct.imagenes : []
+              }}
+
             onSubmit={async (values) => {
               try {
                 const response = await fetch(`https://viramsoftapi.onrender.com/edit_product/${selectedProduct.idProducto}`, {
@@ -154,6 +157,17 @@ const Products = () => {
                     value={formikProps.values.valorVenta}
                     onChange={formikProps.handleChange}
                   />
+                  <Field name="imagen" type="hidden" />
+                  {formikProps.values.imagenes && formikProps.values.imagenes.length > 0 ? (
+                    <img
+                      src={`data:image/jpeg;base64,${formikProps.values.imagenes[0]}`}
+                      alt="Imagen del producto"
+                      style={{ maxWidth: '200px', maxHeight: '200px' }}
+                    />
+                  ) : (
+                    <div>No hay imagen disponible</div>
+                  )}
+                  
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
                   <Button
@@ -277,7 +291,7 @@ const Products = () => {
 
   const cantRegExp = /^[0-9]{1,4}$/;
   const valCoRegExp = /^[0-9]{3,5}$/;
-const valVeRegExp = /^[0-9]{3,5}$/;
+  const valVeRegExp = /^[0-9]{3,5}$/;
 
   const checkoutSchema = yup.object().shape({
     nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
@@ -309,7 +323,7 @@ const valVeRegExp = /^[0-9]{3,5}$/;
           },
           body: JSON.stringify(values),
         });
-  
+
         if (response.ok) {
           setMensaje('Producto agregado exitosamente.');
         } else {
@@ -324,12 +338,12 @@ const valVeRegExp = /^[0-9]{3,5}$/;
 
       <Dialog open={openAddForm} onClose={handleCloseAddForm}>
         {mensaje && (
-            <Box mb="10px">
-              <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
-                {mensaje}
-              </Alert>
-            </Box>
-          )}
+          <Box mb="10px">
+            <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
+              {mensaje}
+            </Alert>
+          </Box>
+        )}
         <Box m="20px">
           <Header title="Agregar producto" />
 
