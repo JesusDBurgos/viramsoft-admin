@@ -512,7 +512,7 @@ const Products = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box m="20px" mt="-50px">
       <Header
         title="Productos"
         subtitle="Interfaz dedicada a la gestión de productos"

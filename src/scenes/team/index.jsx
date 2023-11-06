@@ -169,10 +169,11 @@ const Users = () => {
     fetch('https://viramsoftapi.onrender.com/user')
       .then(response => response.json())
       .then(data => {
-        const formattedData = data.users.map((user, index) => ({
+        const formattedData = data.usuarios.map((user, index) => ({
           ...user,
           id: index,
         }));
+        console.log(usersData)
         setUsersData(formattedData);
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -220,7 +221,7 @@ const Users = () => {
     fetch('https://viramsoftapi.onrender.com/user')
       .then(response => response.json())
       .then(data => {
-        const formattedData = data.users.map((user, index) => ({
+        const formattedData = data.usuarios.map((user, index) => ({
           ...user,
           id: index, // Asignando un id temporal usando el índice del array
         }));
@@ -374,7 +375,7 @@ const Users = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box m="20px" mt="-50px">
       <Header
         title="Usuarios"
         subtitle="Interfaz dedicada a la gestión de usuarios"

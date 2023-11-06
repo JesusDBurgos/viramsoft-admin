@@ -2,7 +2,7 @@ import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useState, useEffect } from "react";
-import EmailIcon from "@mui/icons-material/Email";
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -14,7 +14,6 @@ const Dashboard = () => {
   const colors = tokens(theme.palette.mode);
   const [dashboardData, setDashboardData] = useState(null);
   const [semanasAtras, setSemanasAtras] = useState(4);
-  const [ventasSemana, setVentasSemana] = useState(0);
   const [databc, setDatabc] = useState(null);
 
   useEffect(() => {
@@ -159,12 +158,16 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
-            progress="0.75"
-            increase="+14%"
+            title={dashboardData[0].ganancias}
+            subtitle="Ganancias"
+            progress={
+              dashboardData[2].por_ganancias
+                ? parseFloat(dashboardData[2].porc_ganancias) / 100
+                : 0
+            }
+            increase={dashboardData[2].porc_ganancias}
             icon={
-              <EmailIcon
+              <TrendingUpOutlinedIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }

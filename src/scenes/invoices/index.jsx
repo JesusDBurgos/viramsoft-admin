@@ -14,10 +14,9 @@ const Invoices = () => {
     
     
     {
-      field: "documentoCliente",
-      headerName: "Documento",
-      flex: 1,
-      cellClassName: "name-column-cell",
+      field: "idPedido",
+      headerName: "ID",
+      flex: 0.4,
     },
     {
       field: "observacion",
@@ -27,45 +26,48 @@ const Invoices = () => {
       align: "left",
     },
     {
-      field: "fechaEntrega",
-      headerName: "Fecha de entrega",
-      flex: 1,
-    },
-    {
-      field: "estado",
-      headerName: "Estado",
-      flex: 1,
-    },
-    {
-      field: "idPedido",
-      headerName: "ID Pedido",
-      flex: 1,
-    },
-    {
-      field: "fechaPedido",
-      headerName: "Fecha de pedido",
-      flex: 1,
-    },
-    {
-      field: "valorTotal",
-      headerName: "Valor total",
-      flex: 1,
-    },
-    {
-      field: "telefono",
-      headerName: "Teléfono",
-      flex: 1,
-    },
-    {
       field: "nombre",
-      headerName: "Nombre",
+      headerName: "Cliente",
       flex: 1,
+    },
+    {
+      field: "documentoCliente",
+      headerName: "Documento",
+      flex: 0.7,
+      cellClassName: "name-column-cell",
     },
     {
       field: "direccion",
       headerName: "Dirección",
       flex: 1,
     },
+    {
+      field: "telefono",
+      headerName: "Teléfono",
+      flex: 0.7,
+    },
+    {
+      field: "fechaPedido",
+      headerName: "Fecha de pedido",
+      flex: 0.8,
+    },
+    {
+      field: "fechaEntrega",
+      headerName: "Fecha de entrega",
+      flex: 0.8,
+    },
+    {
+      field: "valorTotal",
+      headerName: "Valor total",
+      flex: 0.8,
+    },
+    {
+      field: "estado",
+      headerName: "Estado",
+      flex: 0.7,
+    },
+    
+    
   ];
 
   useEffect(() => {

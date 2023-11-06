@@ -56,7 +56,7 @@ const Line = ({ isDashboard = false, data }) => {
           },
         },
       }}
-      margin={{ top: 50, right: 50, bottom: 50, left: 50 }}
+      margin={{ top: 50, right: 50, bottom: 50, left: 80 }}
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -71,9 +71,9 @@ const Line = ({ isDashboard = false, data }) => {
       axisBottom={{
         orient: "bottom",
         tickSize: 5,
-        tickPadding: 5,
+        tickPadding: 15,
         legend: isDashboard ? undefined : "transportation",
-        tickRotation: -20,
+        tickRotation: 0,
         legend: "Semanas",
         legendOffset: 26,
         legendPosition: "middle",
