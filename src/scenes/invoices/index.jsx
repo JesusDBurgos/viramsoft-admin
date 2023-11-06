@@ -82,7 +82,7 @@ const Invoices = () => {
   }, []);
 
   return (
-    <Box m="20px">
+    <Box m="20px" mt="-40px">
       <Header
         title="Pedidos"
         subtitle="Interfaz dedicada a la gestión de pedidos"
