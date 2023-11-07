@@ -4,15 +4,23 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useState, useEffect } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
+import RefreshIcon from "@mui/icons-material/Refresh";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 
 const Invoices = () => {
   const [pedidosData, setPedidosData] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [mensajeEstado, setMensajeEstado] = useState(null);
 
   const columns = [
-    
-    
+
+
     {
       field: "idPedido",
       headerName: "ID",
@@ -66,9 +74,42 @@ const Invoices = () => {
       headerName: "Estado",
       flex: 0.7,
     },
-    
-    
+    {
+      field: "vendedor",
+      headerName: "Vendedor",
+      flex: 0.7,
+    },
+    {
+      headerName: "Acciones",
+      flex: 1,
+      renderCell: (params) => (
+        <div>
+          <IconButton color="inherit" onClick={() => handleEntregado(params)}>
+            <CheckIcon />
+          </IconButton>
+
+          <IconButton color="inherit" onClick={() => handleCancelado(params)}>
+            <CancelIcon />
+          </IconButton>
+
+        </div>
+      ),
+    },
   ];
+
+  const handleRefresh = () => {
+    setMensajeEstado(null);
+    fetch("https://viramsoftapi.onrender.com/order")
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedData = data.pedidos.map((pedido, index) => ({
+          ...pedido,
+          id: index,
+        }));
+        setPedidosData(formattedData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
 
   useEffect(() => {
     fetch('https://viramsoftapi.onrender.com/order')
@@ -83,12 +124,65 @@ const Invoices = () => {
       .catch(error => console.error('Error fetching data:', error));
   }, []);
 
+  const handleEntregado = async (params) => {
+    const idPedido = params.row.idPedido;
+    try {
+      const response = await fetch(`https://viramsoftapi.onrender.com/edit_product_state_delivered/${idPedido}`, {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        console.log(`Pedido ${idPedido} marcado como entregado.`);
+        setMensajeEstado(`Pedido ${idPedido} marcado como entregado.`);
+      } else {
+        throw new Error('No se pudo cambiar el estado del pedido a entregado');
+      }
+    } catch (error) {
+      console.error(error);
+      setMensajeEstado(`Error al cambiar el estado del pedido: ${error.message}`);
+    }
+  };
+  
+
+
+  const handleCancelado = async (params) => {
+    const idPedido = params.row.idPedido;
+    try {
+      const response = await fetch(`https://viramsoftapi.onrender.com/edit_product_state_canceled/${idPedido}`, {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        console.log(`Pedido ${idPedido} marcado como cancelado.`);
+        setMensajeEstado(`Pedido ${idPedido} marcado como cancelado.`);
+      } else {
+        throw new Error('No se pudo cambiar el estado del pedido a cancelado');
+      }
+    } catch (error) {
+      console.error(error);
+      setMensajeEstado(`Error al cambiar el estado del pedido: ${error.message}`);
+    }
+  };
+  
+
+
+
   return (
     <Box m="20px" mt="-40px">
       <Header
         title="Pedidos"
         subtitle="Interfaz dedicada a la gestión de pedidos"
       />
+      {mensajeEstado && (
+  <Box mb="10px">
+    <Alert
+      severity={
+        mensajeEstado.includes("exitosamente") ? "success" : "error"
+      }
+    >
+      {mensajeEstado}
+    </Alert>
+  </Box>
+)}
+
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -118,6 +212,17 @@ const Invoices = () => {
           },
         }}
       >
+        <Box display="flex" justifyContent="flex-end" marginBottom="10px">
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<RefreshIcon />}
+            onClick={handleRefresh}
+            style={{ marginRight: 7 }} // Añadido para separar los botones
+          >
+            Refrescar
+          </Button>
+        </Box>
         <DataGrid
           rows={pedidosData}
           columns={columns}

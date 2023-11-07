@@ -76,8 +76,10 @@ const Users = () => {
             initialValues={{
               nombre: selectedUser ? selectedUser.nombre : "",
               username: selectedUser ? selectedUser.username : "",
+              password: selectedUser ? selectedUser.password : "",
               rol: selectedUser ? selectedUser.rol : "",
             }}
+            validationSchema={checkoutSchema2}
             onSubmit={async (values) => {
               try {
                 const response = await fetch(`https://viramsoftapi.onrender.com/edit_user/${selectedUser.id}`, {
@@ -99,8 +101,15 @@ const Users = () => {
               }
             }}
           >
-            {(formikProps) => (
-              <form onSubmit={formikProps.handleSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handledBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
                 <Box
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
@@ -113,22 +122,28 @@ const Users = () => {
                     fullWidth
                     variant="filled"
                     type="text"
-                    label="Cantidad"
-                    name="cantidad"
-                    sx={{ gridColumn: "span 2", }}
-                    value={formikProps.values.cantidad}
-                    onChange={formikProps.handleChange}
+                    label="Username"
+                    name="username"
+                    onBlur={handledBlur}
+                    error={!!touched.username && !!errors.username}
+                    helperText={touched.username && errors.username}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.username}
+                    onChange={handleChange}
                   />
                   <TextField
                     style={{ margin: 1, marginBottom: 25 }}
                     fullWidth
                     variant="filled"
                     type="text"
-                    label="Valor de compra"
-                    name="valorCompra"
-                    sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.valorCompra}
-                    onChange={formikProps.handleChange}
+                    label="Password"
+                    name="password"
+                    onBlur={handledBlur}
+                    error={!!touched.password && !!errors.password}
+                    helperText={touched.password && errors.password}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.password}
+                    onChange={handleChange}
                   />
 
                   <TextField
@@ -136,12 +151,31 @@ const Users = () => {
                     fullWidth
                     variant="filled"
                     type="text"
-                    label="Valor de venta"
-                    name="valorVenta"
-                    sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.valorVenta}
-                    onChange={formikProps.handleChange}
+                    label="Nombre"
+                    name="nombre"
+                    onBlur={handledBlur}
+                    error={!!touched.nombre && !!errors.nombre}
+                    helperText={touched.nombre && errors.nombre}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.nombre}
+                    onChange={handleChange}
                   />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    label="Rol"
+                    select
+                    value={values.rol}
+                    name="rol"
+                    onBlur={handledBlur}
+                    error={!!touched.rol && !!errors.rol}
+                    helperText={touched.rol && errors.rol}
+                    sx={{ gridColumn: "span 2" }}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="Administrador">Administrador</MenuItem>
+                    <MenuItem value="Vendedor">Vendedor</MenuItem>
+                  </TextField>
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
                   <Button
@@ -169,9 +203,8 @@ const Users = () => {
     fetch('https://viramsoftapi.onrender.com/user')
       .then(response => response.json())
       .then(data => {
-        const formattedData = data.usuarios.map((user, index) => ({
+        const formattedData = data.usuarios.map((user) => ({
           ...user,
-          id: index,
         }));
         console.log(usersData)
         setUsersData(formattedData);
@@ -221,9 +254,9 @@ const Users = () => {
     fetch('https://viramsoftapi.onrender.com/user')
       .then(response => response.json())
       .then(data => {
-        const formattedData = data.usuarios.map((user, index) => ({
+        const formattedData = data.usuarios.map((user) => ({
           ...user,
-          id: index, // Asignando un id temporal usando el índice del array
+           // Asignando un id temporal usando el índice del array
         }));
         setUsersData(formattedData);
       })
@@ -238,6 +271,13 @@ const Users = () => {
   };
 
   const checkoutSchema = yup.object().shape({
+    nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
+    username: yup.string().required("Requerido").max(20, "El username debe tener como máximo 20 caracteres"),
+    password: yup.string().required("Requerido").min(8, "La contraseña debe tener como mínimo 8 caracteres"),
+    rol: yup.string().required("Requerido"),
+  });
+
+  const checkoutSchema2 = yup.object().shape({
     nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
     username: yup.string().required("Requerido").max(20, "El username debe tener como máximo 20 caracteres"),
     password: yup.string().required("Requerido").min(8, "La contraseña debe tener como mínimo 8 caracteres"),

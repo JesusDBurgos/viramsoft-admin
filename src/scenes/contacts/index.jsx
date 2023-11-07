@@ -20,6 +20,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Alert from "@mui/material/Alert";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 
+
 const Contacts = () => {
   const [clientesData, setClientesData] = useState([]);
   const theme = useTheme();

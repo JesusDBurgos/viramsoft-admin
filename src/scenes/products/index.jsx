@@ -85,6 +85,7 @@ const Products = () => {
           <Header title="Editar producto" />
 
           <Formik
+          
             initialValues={{
               cantidad: selectedProduct ? selectedProduct.cantidad : "",
               valorCompra: selectedProduct ? selectedProduct.valorCompra : "",
@@ -92,7 +93,7 @@ const Products = () => {
               imagen: selectedProduct && selectedProduct.imagenes ? (selectedProduct.imagenes.length > 0 ? selectedProduct.imagenes[0] : '') : '',
               imagenes: selectedProduct && selectedProduct.imagenes ? selectedProduct.imagenes : []
               }}
-
+            validationSchema={checkoutSchema2}
             onSubmit={async (values) => {
               try {
                 const response = await fetch(`https://viramsoftapi.onrender.com/edit_product/${selectedProduct.idProducto}`, {
@@ -114,8 +115,15 @@ const Products = () => {
               }
             }}
           >
-            {(formikProps) => (
-              <form onSubmit={formikProps.handleSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handledBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
                 <Box
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
@@ -130,9 +138,12 @@ const Products = () => {
                     type="text"
                     label="Cantidad"
                     name="cantidad"
-                    sx={{ gridColumn: "span 2", }}
-                    value={formikProps.values.cantidad}
-                    onChange={formikProps.handleChange}
+                    onBlur={handledBlur}
+                    error={!!touched.cantidad && !!errors.cantidad}
+                    helperText={touched.cantidad && errors.cantidad}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.cantidad}
+                    onChange={handleChange}
                   />
                   <TextField
                     style={{ margin: 1, marginBottom: 25 }}
@@ -141,9 +152,12 @@ const Products = () => {
                     type="text"
                     label="Valor de compra"
                     name="valorCompra"
-                    sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.valorCompra}
-                    onChange={formikProps.handleChange}
+                    onBlur={handledBlur}
+                    error={!!touched.valorCompra && !!errors.valorCompra}
+                    helperText={touched.valorCompra && errors.valorCompra}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.valorCompra}
+                    onChange={handleChange}
                   />
 
                   <TextField
@@ -153,20 +167,24 @@ const Products = () => {
                     type="text"
                     label="Valor de venta"
                     name="valorVenta"
-                    sx={{ gridColumn: "span 4" }}
-                    value={formikProps.values.valorVenta}
-                    onChange={formikProps.handleChange}
+                    onBlur={handledBlur}
+                    error={!!touched.valorVenta && !!errors.valorVenta}
+                    helperText={touched.valorVenta && errors.valorVenta}
+                    sx={{ gridColumn: "span 2" }}
+                    value={values.valorVenta}
+                    onChange={handleChange}
                   />
                   <Field name="imagen" type="hidden" />
-                  {formikProps.values.imagenes && formikProps.values.imagenes.length > 0 ? (
+                  {values.imagenes && values.imagenes.length > 0 ? (
                     <img
-                      src={`data:image/jpeg;base64,${formikProps.values.imagenes[0]}`}
+                      src={`data:image/jpeg;base64,${values.imagenes[0]}`}
                       alt="Imagen del producto"
                       style={{ maxWidth: '200px', maxHeight: '200px' }}
                     />
                   ) : (
                     <div>No hay imagen disponible</div>
                   )}
+                  
                   
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
@@ -297,6 +315,22 @@ const Products = () => {
     nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
     marca: yup.string().required("Requerido").max(20, "La marca debe tener como máximo 20 caracteres"),
     categoria: yup.string().required("Requerido"),
+    cantidad: yup
+      .string()
+      .matches(cantRegExp, "Cantidad inválida")
+      .required("Requerido"),
+    valorCompra: yup
+      .string()
+      .matches(valCoRegExp, "Valor de compra inválido")
+      .required("Requerido"),
+    valorVenta: yup
+      .string()
+      .matches(valVeRegExp, "Valor de venta inválido")
+      .required("Requerido"),
+    unidadMedida: yup.string().required("Requerido").max(10, "La unidad de medida debe tener como máximo 10 caracteres"),
+  });
+
+  const checkoutSchema2 = yup.object().shape({
     cantidad: yup
       .string()
       .matches(cantRegExp, "Cantidad inválida")
