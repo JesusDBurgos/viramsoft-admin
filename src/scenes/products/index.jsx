@@ -40,6 +40,7 @@ const Products = () => {
   const [openAddForm, setOpenAddForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
+  
 
   const handleOpenAddForm = (product) => {
     setAddProduct(product);
@@ -85,14 +86,15 @@ const Products = () => {
           <Header title="Editar producto" />
 
           <Formik
-          
+
+
             initialValues={{
               cantidad: selectedProduct ? selectedProduct.cantidad : "",
               valorCompra: selectedProduct ? selectedProduct.valorCompra : "",
               valorVenta: selectedProduct ? selectedProduct.valorVenta : "",
               imagen: selectedProduct && selectedProduct.imagenes ? (selectedProduct.imagenes.length > 0 ? selectedProduct.imagenes[0] : '') : '',
               imagenes: selectedProduct && selectedProduct.imagenes ? selectedProduct.imagenes : []
-              }}
+            }}
             validationSchema={checkoutSchema2}
             onSubmit={async (values) => {
               try {
@@ -115,6 +117,7 @@ const Products = () => {
               }
             }}
           >
+
             {({
               values,
               errors,
@@ -174,7 +177,74 @@ const Products = () => {
                     value={values.valorVenta}
                     onChange={handleChange}
                   />
+
                   <Field name="imagen" type="hidden" />
+                  <FormControl fullWidth variant="filled">
+                    <Button
+                      style={{ marginRight: 7 }}
+                      color="secondary"
+                      variant="contained"
+                      component="label"
+                    >
+                      Subir imagen
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            setImagenSeleccionada(file);
+                          }
+                        }}
+                      />
+                    </Button>
+
+                    {imagenSeleccionada && (
+                      <Card style={{ marginTop: "30px" }}>
+                        <CardMedia
+                          component="img"
+                          alt="Imagen seleccionada"
+                          style={{ maxWidth: '300px', maxHeight: '300px' }}
+                          image={URL.createObjectURL(imagenSeleccionada)}
+                        />
+                      </Card>
+                    )}
+
+                    <Button
+                      style={{ marginTop: '20px', marginBottom: '20px' }}
+                      color="secondary"
+                      variant="contained"
+                      onClick={() => {
+                        if (imagenSeleccionada) {
+                          console.log('ID del producto:', selectedProduct.idProducto);
+                          const formData = new FormData();
+                          formData.append('imagen', imagenSeleccionada);
+
+                          fetch(`https://viramsoftapi.onrender.com/cargar_imagen?producto_id=${selectedProduct.idProducto}`, {
+
+                            method: 'POST',
+                            body: formData,
+                          })
+                            .then(response => {
+                              if (response.ok) {
+                                console.log('Imagen cargada con éxito');
+                                // Puedes realizar aquí las acciones adicionales después de cargar la imagen.
+                              } else {
+                                console.error('Error al cargar la imagen');
+                                // Puedes manejar el error aquí.
+                              }
+                            })
+                            .catch(error => {
+                              console.error('Error al enviar la solicitud:', error);
+                              // Puedes manejar el error de la solicitud aquí.
+                            });
+                        }
+                      }}
+                    >
+                      Cargar Imagen
+                    </Button>
+                  </FormControl>
                   {values.imagenes && values.imagenes.length > 0 ? (
                     <img
                       src={`data:image/jpeg;base64,${values.imagenes[0]}`}
@@ -184,8 +254,8 @@ const Products = () => {
                   ) : (
                     <div>No hay imagen disponible</div>
                   )}
-                  
-                  
+
+
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
                   <Button
@@ -210,6 +280,7 @@ const Products = () => {
   };
 
   const handleRefresh = () => {
+    setImagenSeleccionada(null);
     fetch('https://viramsoftapi.onrender.com/product')
       .then(response => response.json())
       .then(data => {
@@ -304,7 +375,7 @@ const Products = () => {
     valorCompra: "",
     valorVenta: "",
     unidadMedida: "",
-    imagenes: "",
+    imagen: "",
   };
 
   const cantRegExp = /^[0-9]{1,4}$/;
@@ -346,10 +417,26 @@ const Products = () => {
     unidadMedida: yup.string().required("Requerido").max(10, "La unidad de medida debe tener como máximo 10 caracteres"),
   });
 
+  const convertImageToBase64 = (image) => {
+    return new Promise((resolve) => {
+      const fileReader = new FileReader();
+      fileReader.onload = (event) => {
+        const base64String = event.target.result.split(',')[1];
+        resolve(base64String);
+      };
+      fileReader.readAsDataURL(image);
+    });
+  };
+
   const OpenAddProductoDialog = () => {
+    
     const isNonMobile = useMediaQuery("(min-width:600px");
     const handleFormSubmit = async (values) => {
       try {
+        if (imagenSeleccionada) {
+          const imagenBase64 = await convertImageToBase64(imagenSeleccionada);
+          values.imagen = imagenBase64;
+        }
         const response = await fetch('https://viramsoftapi.onrender.com/create_product', {
           method: 'POST',
           headers: {
