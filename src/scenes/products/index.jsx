@@ -63,6 +63,7 @@ const Products = () => {
   const handleCloseEditForm = () => {
     setSelectedProduct(null);
     setOpenEditForm(false);
+    setImagenSeleccionada(null);
   };
 
   const EditarProductoDialog = () => {
@@ -181,7 +182,7 @@ const Products = () => {
                   <Field name="imagen" type="hidden" />
                   <FormControl fullWidth variant="filled">
                     <Button
-                      style={{ marginRight: 7 }}
+                      style={{ marginTop: '1px', marginBottom: '1px' }}
                       color="secondary"
                       variant="contained"
                       component="label"
@@ -242,7 +243,7 @@ const Products = () => {
                         }
                       }}
                     >
-                      Cargar Imagen
+                      Confirmar Nueva Imagen
                     </Button>
                   </FormControl>
                   {values.imagenes && values.imagenes.length > 0 ? (
