@@ -73,30 +73,17 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="5px"
-                mt="-30px"
-                mb="-25px"
+                ml="10px"
+                mt="0px"
+                mb="5px"
+                
               >
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
-                </IconButton>
-
-                <Typography variant="h4" color={colors.grey[100]} sx={{ml:"20px"}}>
+                </IconButton>                
+                <Typography variant="h4" color={colors.grey[100]} sx={{mr:"70px"}}>
                   Viramsoft
                 </Typography>
-                <Box>
-                  <img
-                    alt="profile-user"
-                    width="80"
-                    height="80"
-                    src={`../../assets/logo.png`}
-                    style={{
-                      cursor: "pointer",
-                      borderRadius: "10%",
-                      marginTop: "15px",
-                    }}
-                  />
-                </Box>
               </Box>
             )}
           </MenuItem>

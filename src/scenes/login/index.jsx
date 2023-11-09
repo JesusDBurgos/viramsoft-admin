@@ -46,20 +46,8 @@ const Login = () => {
         class="container-login"
         style={{ backgroundColor: colors.primary[400] }}
       >
-        <Box>
-          <img
-            alt="profile-user"
-            width="100"
-            height="100"
-            src={`../../assets/logo.png`}
-            style={{
-              marginTop: "-60px",
-              marginBottom: "-25px",
-            }}
-          />
-        </Box>
         <h4 style={{ textAlign: "center", marginBottom: "35px" }}>
-          Login Viramsoft Admin
+          Iniciar sesión
         </h4>
         
         <input
