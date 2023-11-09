@@ -8,17 +8,15 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import IconButton from '@mui/material/IconButton';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import { Formik } from "formik";
 import * as yup from "yup";
 import MenuItem from "@mui/material/MenuItem";
-
-
 
 const Users = () => {
   const [usersData, setUsersData] = useState([]);
@@ -29,7 +27,7 @@ const Users = () => {
   const [addUser, setAddUser] = useState(null);
   const [openAddForm, setOpenAddForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  
+
   const handleOpenAddForm = (user) => {
     setAddUser(user);
     setOpenAddForm(true);
@@ -38,7 +36,7 @@ const Users = () => {
   const handleCloseAddForm = () => {
     setAddUser(null);
     setOpenAddForm(false);
-    setMensaje(null); 
+    setMensaje(null);
   };
 
   const handleOpenEditForm = (user) => {
@@ -55,14 +53,15 @@ const Users = () => {
   const EditarUserDialog = () => {
     const isNonMobile = useMediaQuery("(min-width:600px");
     return (
-
       <Dialog open={openEditForm} onClose={handleCloseEditForm}>
-
-
         <DialogContent>
           {mensaje && (
             <Box mb="10px">
-              <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
+              <Alert
+                severity={
+                  mensaje.includes("exitosamente") ? "success" : "error"
+                }
+              >
                 {mensaje}
               </Alert>
             </Box>
@@ -82,22 +81,28 @@ const Users = () => {
             validationSchema={checkoutSchema2}
             onSubmit={async (values) => {
               try {
-                const response = await fetch(`https://viramsoftapi.onrender.com/edit_user/${selectedUser.id}`, {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(values),
-                });
+                if (values.password == null) {
+                  values.password = "";
+                }
+                const response = await fetch(
+                  `https://viramsoftapi.onrender.com/edit_user/${selectedUser.id}`,
+                  {
+                    method: "PUT",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values),
+                  }
+                );
 
                 if (response.ok) {
-                  setMensaje('Usuario actualizado exitosamente.');
+                  setMensaje("Usuario actualizado exitosamente.");
                 } else {
-                  setMensaje('Error al actualizar el usuario.');
+                  setMensaje("Error al actualizar el usuario.");
                 }
               } catch (error) {
-                console.error('Error al enviar la solicitud:', error);
-                setMensaje('Error al actualizar el usuario.');
+                console.error("Error al enviar la solicitud:", error);
+                setMensaje("Error al actualizar el usuario.");
               }
             }}
           >
@@ -114,7 +119,9 @@ const Users = () => {
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
                   sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
                   }}
                 >
                   <TextField
@@ -200,20 +207,19 @@ const Users = () => {
   };
 
   const handleRefresh = () => {
-    fetch('https://viramsoftapi.onrender.com/user')
-      .then(response => response.json())
-      .then(data => {
+    fetch("https://viramsoftapi.onrender.com/user")
+      .then((response) => response.json())
+      .then((data) => {
         const formattedData = data.usuarios.map((user) => ({
           ...user,
         }));
-        console.log(usersData)
+        console.log(usersData);
         setUsersData(formattedData);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   };
 
   const columns = [
-
     {
       field: "id",
       headerName: "ID",
@@ -239,28 +245,29 @@ const Users = () => {
       flex: 1,
       renderCell: (params) => (
         <div>
-          <IconButton color="inherit" onClick={() => handleOpenEditForm(params.row)}>
+          <IconButton
+            color="inherit"
+            onClick={() => handleOpenEditForm(params.row)}
+          >
             <EditIcon />
           </IconButton>
-          <IconButton color="inherit">
-          </IconButton>
+          <IconButton color="inherit"></IconButton>
         </div>
       ),
     },
   ];
 
-
   useEffect(() => {
-    fetch('https://viramsoftapi.onrender.com/user')
-      .then(response => response.json())
-      .then(data => {
+    fetch("https://viramsoftapi.onrender.com/user")
+      .then((response) => response.json())
+      .then((data) => {
         const formattedData = data.usuarios.map((user) => ({
           ...user,
-           // Asignando un id temporal usando el índice del array
+          // Asignando un id temporal usando el índice del array
         }));
         setUsersData(formattedData);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const initialValues = {
@@ -271,16 +278,34 @@ const Users = () => {
   };
 
   const checkoutSchema = yup.object().shape({
-    nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
-    username: yup.string().required("Requerido").max(20, "El username debe tener como máximo 20 caracteres"),
-    password: yup.string().required("Requerido").min(8, "La contraseña debe tener como mínimo 8 caracteres"),
+    nombre: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El nombre debe tener como máximo 20 caracteres"),
+    username: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El username debe tener como máximo 20 caracteres"),
+    password: yup
+      .string()
+      .required("Requerido")
+      .min(8, "La contraseña debe tener como mínimo 8 caracteres"),
     rol: yup.string().required("Requerido"),
   });
 
   const checkoutSchema2 = yup.object().shape({
-    nombre: yup.string().required("Requerido").max(20, "El nombre debe tener como máximo 20 caracteres"),
-    username: yup.string().required("Requerido").max(20, "El username debe tener como máximo 20 caracteres"),
-    password: yup.string().required("Requerido").min(8, "La contraseña debe tener como mínimo 8 caracteres"),
+    nombre: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El nombre debe tener como máximo 20 caracteres"),
+    username: yup
+      .string()
+      .required("Requerido")
+      .max(20, "El username debe tener como máximo 20 caracteres"),
+    password: yup
+      .string()
+      .min(8, "La contraseña debe tener como mínimo 8 caracteres")
+      .nullable(),
     rol: yup.string().required("Requerido"),
   });
 
@@ -288,34 +313,38 @@ const Users = () => {
     const isNonMobile = useMediaQuery("(min-width:600px");
     const handleFormSubmit = async (values) => {
       try {
-        const response = await fetch('https://viramsoftapi.onrender.com/user_register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values),
-        });
-  
+        const response = await fetch(
+          "https://viramsoftapi.onrender.com/user_register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
         if (response.ok) {
-          setMensaje('Usuario agregado exitosamente.');
+          setMensaje("Usuario agregado exitosamente.");
         } else {
-          setMensaje('Error al agregar el usuario.');
+          setMensaje("Error al agregar el usuario.");
         }
       } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
-        setMensaje('Error al agregar el usuario.');
+        console.error("Error al enviar la solicitud:", error);
+        setMensaje("Error al agregar el usuario.");
       }
-    }
+    };
     return (
-
       <Dialog open={openAddForm} onClose={handleCloseAddForm}>
         {mensaje && (
-            <Box mb="10px">
-              <Alert severity={mensaje.includes('exitosamente') ? 'success' : 'error'}>
-                {mensaje}
-              </Alert>
-            </Box>
-          )}
+          <Box mb="10px">
+            <Alert
+              severity={mensaje.includes("exitosamente") ? "success" : "error"}
+            >
+              {mensaje}
+            </Alert>
+          </Box>
+        )}
         <Box m="20px">
           <Header title="Agregar usuario" />
 
@@ -338,7 +367,9 @@ const Users = () => {
                   gap="30px"
                   gridTemplateColumns="repeat(4,minmax(0, 1fr))"
                   sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
                   }}
                 >
                   <TextField
@@ -395,11 +426,16 @@ const Users = () => {
                   >
                     <MenuItem value="Administrador">Administrador</MenuItem>
                     <MenuItem value="Vendedor">Vendedor</MenuItem>
-
                   </TextField>
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
-                  <Button style={{ marginRight: 7 }} type="submit" color="secondary" variant="contained" onClick={handleCloseAddForm}>
+                  <Button
+                    style={{ marginRight: 7 }}
+                    type="submit"
+                    color="secondary"
+                    variant="contained"
+                    onClick={handleCloseAddForm}
+                  >
                     Cerrar
                   </Button>
                   <Button type="submit" color="secondary" variant="contained">
@@ -469,15 +505,11 @@ const Users = () => {
           </Button>
         </Box>
 
-        <DataGrid
-          rows={usersData}
-          columns={columns}
-        />
+        <DataGrid rows={usersData} columns={columns} />
       </Box>
       <EditarUserDialog />
       <OpenAddUserDialog />
     </Box>
-
   );
 };
 
