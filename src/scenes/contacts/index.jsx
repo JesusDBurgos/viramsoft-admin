@@ -67,9 +67,10 @@ const Contacts = () => {
       );
 
       if (response.ok) {
-        setMensajeEstado(
-          `Estado del cliente cambiado exitosamente para el cliente ${id_cliente}.`
-        );
+        handleRefresh();
+        setTimeout(() => {
+          setMensajeEstado(null) 
+        }, 5000);
       } else {
         setMensajeEstado(
           `Error al cambiar el estado del cliente para el cliente ${id_cliente}.`
@@ -169,6 +170,7 @@ const Contacts = () => {
                 );
 
                 if (response.ok) {
+                  handleRefresh();
                   setMensaje("Cliente actualizado exitosamente.");
                 } else {
                   setMensaje("Error al actualizar el cliente.");
@@ -264,7 +266,6 @@ const Contacts = () => {
   };
 
   const handleRefresh = () => {
-    setMensajeEstado(null);
     fetch("https://viramsoftapi.onrender.com/costumer")
       .then((response) => response.json())
       .then((data) => {
@@ -373,6 +374,7 @@ const Contacts = () => {
         );
 
         if (response.ok) {
+          handleRefresh();
           setMensaje("Cliente agregado exitosamente.");
         } else {
           setMensaje("Error al agregar el cliente.");
@@ -544,15 +546,6 @@ const Contacts = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<RefreshIcon />}
-            onClick={handleRefresh}
-            style={{ marginRight: 7 }} // Añadido para separar los botones
-          >
-            Refrescar
-          </Button>
           <Button
             variant="contained"
             color="secondary"

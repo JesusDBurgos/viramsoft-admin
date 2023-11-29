@@ -96,6 +96,7 @@ const Users = () => {
                 );
 
                 if (response.ok) {
+                  handleRefresh();
                   setMensaje("Usuario actualizado exitosamente.");
                 } else {
                   setMensaje("Error al actualizar el usuario.");
@@ -325,6 +326,7 @@ const Users = () => {
         );
 
         if (response.ok) {
+          handleRefresh();
           setMensaje("Usuario agregado exitosamente.");
         } else {
           setMensaje("Error al agregar el usuario.");
@@ -486,15 +488,6 @@ const Users = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<RefreshIcon />}
-            onClick={handleRefresh}
-            style={{ marginRight: 7 }}
-          >
-            Refrescar
-          </Button>
           <Button
             variant="contained"
             color="secondary"

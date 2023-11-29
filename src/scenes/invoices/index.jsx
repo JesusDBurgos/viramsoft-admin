@@ -219,17 +219,6 @@ const Invoices = () => {
           },
         }}
       >
-        <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<RefreshIcon />}
-            onClick={handleRefresh}
-            style={{ marginRight: 7 }} // Añadido para separar los botones
-          >
-            Refrescar
-          </Button>
-        </Box>
         <DataGrid
           rows={pedidosData}
           columns={columns}

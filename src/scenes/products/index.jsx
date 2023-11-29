@@ -108,6 +108,7 @@ const Products = () => {
                 });
 
                 if (response.ok) {
+                  handleRefresh();
                   setMensaje('Producto actualizado exitosamente.');
                 } else {
                   setMensaje('Error al actualizar el producto.');
@@ -268,6 +269,9 @@ const Products = () => {
                   >
                     Cerrar
                   </Button>
+                  {/* <Button color="secondary" variant="contained" type="submit">
+                    Guardar
+                  </Button> */}
                   <Button color="secondary" variant="contained" type="submit">
                     Guardar
                   </Button>
@@ -447,6 +451,7 @@ const Products = () => {
         });
 
         if (response.ok) {
+          handleRefresh();
           setMensaje('Producto agregado exitosamente.');
         } else {
           setMensaje('Error al agregar el producto.');
@@ -669,15 +674,6 @@ const Products = () => {
         }}
       >
         <Box display="flex" justifyContent="flex-end" marginBottom="10px">
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<RefreshIcon />}
-            onClick={handleRefresh}
-            style={{ marginRight: 7 }} // Añadido para separar los botones
-          >
-            Refrescar
-          </Button>
           <Button
             variant="contained"
             color="secondary"
