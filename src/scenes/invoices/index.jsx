@@ -98,7 +98,6 @@ const Invoices = () => {
   ];
 
   const handleRefresh = () => {
-    setMensajeEstado(null);
     fetch("https://viramsoftapi.onrender.com/order")
       .then((response) => response.json())
       .then((data) => {
@@ -133,6 +132,10 @@ const Invoices = () => {
       if (response.ok) {
         console.log(`Pedido ${idPedido} marcado como entregado.`);
         setMensajeEstado(`Pedido ${idPedido} marcado como entregado.`);
+        handleRefresh();
+        setTimeout(() => {
+          setMensajeEstado(null) 
+        }, 5000);
       } else {
         throw new Error('No se pudo cambiar el estado del pedido a entregado');
       }
@@ -153,6 +156,10 @@ const Invoices = () => {
       if (response.ok) {
         console.log(`Pedido ${idPedido} marcado como cancelado.`);
         setMensajeEstado(`Pedido ${idPedido} marcado como cancelado.`);
+        handleRefresh();
+        setTimeout(() => {
+          setMensajeEstado(null) 
+        }, 5000);
       } else {
         throw new Error('No se pudo cambiar el estado del pedido a cancelado');
       }
