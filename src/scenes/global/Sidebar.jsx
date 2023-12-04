@@ -106,7 +106,7 @@ const Sidebar = () => {
           <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "15px 0 5px 14px" }}
             >
               Servicios
             </Typography>
@@ -151,7 +151,7 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{ m: "15px 0 5px 10px" }}
             >
               Acerca de nosotros
             </Typography>

@@ -55,7 +55,7 @@ const FAQ = () => {
           <br />
           <EmailIcon /> <Typography>Correo: jesusdburgost@gmail.com</Typography>
           <br />
-          <LinkedInIcon /> <Typography>LinkedIn: https://www.linkedin.com/in/jesus-burgos/?original</Typography>
+          <LinkedInIcon /> <Typography>LinkedIn: https://www.linkedin.com/in/jesus-burgos/</Typography>
           <img
             alt="profile-user"
             width="100"
