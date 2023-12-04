@@ -16,7 +16,7 @@ const FAQ = () => {
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Box m="20px">
+    <Box m="20px" mt="-40px">
       <Header title="Información de contacto" subtitle="Aquí puede contactar a los desarrolladores" />
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
