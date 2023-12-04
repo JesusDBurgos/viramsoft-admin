@@ -18,7 +18,7 @@ const FAQ = () => {
   return (
     <Box m="20px">
       <Header title="Información de contacto" subtitle="Aquí puede contactar a los desarrolladores" />
-      <Accordion defaultExpanded>
+      <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
             Víctor Manuel Peraza Beltrán
