@@ -369,7 +369,6 @@ const Products = () => {
           >
             <EditIcon />
           </IconButton>
-          <IconButton color="inherit"></IconButton>
         </div>
       ),
     },
