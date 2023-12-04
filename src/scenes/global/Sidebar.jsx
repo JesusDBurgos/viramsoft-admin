@@ -73,22 +73,44 @@ const Sidebar = () => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                ml="10px"
-                mt="0px"
-                mb="5px"
+                ml="5px"
+                mt="-30px"
+                mb="-25px"
                 
               >
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>                
-                <Typography variant="h4" color={colors.grey[100]} sx={{mr:"70px"}}>
+                <Typography variant="h4" color={colors.grey[100]} sx={{mr:"20px"}}>
                   Viramsoft
                 </Typography>
+                <Box>
+                  <img
+                    alt="profile-user"
+                    width="80"
+                    height="80"
+                    src={`../../assets/logo.png`}
+                    style={{
+                      cursor: "pointer",
+                      borderRadius: "10%",
+                      marginTop: "15px",
+                    }}
+                  />
+                </Box>
               </Box>
             )}
           </MenuItem>
 
           <Box paddingLeft={isCollapsed ? undefined : "5%"}>
+            
+          <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Servicios
+            </Typography>
+
             <Item
               title="Dashboard"
               to="/dashboard"
@@ -131,10 +153,10 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Pages
+              Acerca de nosotros
             </Typography>
             <Item
-              title="FAQ Page"
+              title="Información de contacto"
               to="/faq"
               icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
